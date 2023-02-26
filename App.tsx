@@ -2,17 +2,21 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { ImagePickerResult, launchImageLibraryAsync } from "expo-image-picker";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import ImageViewer from "./components/ImageViewer";
 import Button from "./components/Button";
 import CircleButton from "./components/CircleButton";
 import IconButton from "./components/IconButton";
 import EmojiPicker from "./components/EmojiPicker";
+import EmojiList from "./components/EmojiList";
+import EmojiSticker from "./components/EmojiSticker";
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [selectedEmoji, setSelectedEmoji] = useState<any>(null);
 
   const pickImageAsync = async () => {
     const result: ImagePickerResult = await launchImageLibraryAsync({
@@ -36,15 +40,20 @@ export default function App() {
     alert("Not implemented.");
   };
 
+  const onEmojiPickerClose = () => setShowEmojiPicker(false);
+
   const onAddSticker = () => setShowEmojiPicker(true);
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer
           placeholderImageSource={require("./assets/images/background-image.png")}
           selectedImage={selectedImage ?? null}
         />
+        {selectedEmoji && (
+          <EmojiSticker imageSize={40} stickerSource={selectedEmoji} />
+        )}
       </View>
 
       {showAppOptions ? (
@@ -69,15 +78,12 @@ export default function App() {
         </View>
       )}
 
-      <EmojiPicker
-        isVisible={showEmojiPicker}
-        onClose={() => setShowEmojiPicker(false)}
-      >
-        <Text style={{ color: "#fff" }}>AGGRESSIVE HELLO WORLD!!</Text>
+      <EmojiPicker isVisible={showEmojiPicker} onClose={onEmojiPickerClose}>
+        <EmojiList onClose={onEmojiPickerClose} onSelect={setSelectedEmoji} />
       </EmojiPicker>
 
       <StatusBar style="auto" />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
