@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { ImagePickerResult, launchImageLibraryAsync } from "expo-image-picker";
@@ -17,6 +17,11 @@ export default function App() {
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [selectedEmoji, setSelectedEmoji] = useState<any>(null);
+  const [stickerSize, setStickerSize] = useState<number>(40);
+
+  // useEffect(() => {
+  //   console.log(`stickerSize: ${stickerSize}`);
+  // }, [stickerSize]);
 
   const pickImageAsync = async () => {
     const result: ImagePickerResult = await launchImageLibraryAsync({
@@ -34,7 +39,10 @@ export default function App() {
     setShowAppOptions(true);
   };
 
-  const onReset = () => setShowAppOptions(false);
+  const onReset = () => {
+    setShowAppOptions(false);
+    setSelectedEmoji(null);
+  };
 
   const onSave = () => {
     alert("Not implemented.");
@@ -52,7 +60,7 @@ export default function App() {
           selectedImage={selectedImage ?? null}
         />
         {selectedEmoji && (
-          <EmojiSticker imageSize={40} stickerSource={selectedEmoji} />
+          <EmojiSticker imageSize={stickerSize} stickerSource={selectedEmoji} />
         )}
       </View>
 

@@ -22,7 +22,8 @@ export default function ImageViewer({
 const styles = StyleSheet.create({
   image: {
     width: 320,
-    height: 440,
+    // height: 440,
+    height: 600,
     borderRadius: 18,
   },
 });
